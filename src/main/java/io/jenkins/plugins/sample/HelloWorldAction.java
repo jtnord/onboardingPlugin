@@ -2,11 +2,13 @@ package io.jenkins.plugins.sample;
 
 import hudson.model.Action;
 import hudson.model.Run;
+import jenkins.model.RunAction2;
 
-public class HelloWorldAction implements Action {
+
+//RunAction2 is the interface to implement so that actions added to Run properly get references to the Run.
+public class HelloWorldAction implements RunAction2 {
 
     private transient Run run;
-
     private String name;
 
     public HelloWorldAction (String name){
@@ -15,6 +17,24 @@ public class HelloWorldAction implements Action {
 
     public String getName(){
         return name;
+    }
+
+
+    @Override
+    public void onAttached(Run <?, ?> run){
+        //Setting the field when first attaching this action to the Run.
+        this.run = run;
+    }
+
+    @Override
+    public void onLoad(Run <?, ?> run){
+        //	Setting the run field when loading this action from disk
+        this.run = run;
+    }
+
+    //This will make the Run available for use in the Jelly view—it cannot access private fields.
+    public Run getRun(){
+        return run;
     }
 
     /**
