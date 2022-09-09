@@ -6,7 +6,9 @@
         </l:side-panel>
 		<l:main-panel> 
             <h1> 
-                Name: ${it.name} 
+                Name: ${it.name}
+                <br/>
+                Description: ${it.myDescription}
             </h1>
         </l:main-panel>
     </l:layout>

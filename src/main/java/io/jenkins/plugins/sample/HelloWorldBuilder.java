@@ -3,6 +3,7 @@ package io.jenkins.plugins.sample;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.FilePath;
+import hudson.model.Describable;
 import hudson.util.FormValidation;
 import hudson.model.AbstractProject;
 import hudson.model.Run;
@@ -18,19 +19,22 @@ import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
 
-public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
+public class HelloWorldBuilder extends Builder implements SimpleBuildStep{
 
     private final String name;
+    private final String myDescription;
     private boolean useFrench;
 
     @DataBoundConstructor
-    public HelloWorldBuilder(String name) {
+    public HelloWorldBuilder(String name, String myDescription) {
         this.name = name;
+        this.myDescription = myDescription;
     }
 
     public String getName() {
         return name;
     }
+    public String getMyDescription(){ return myDescription; }
 
     public boolean isUseFrench() {
         return useFrench;
@@ -76,6 +80,7 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
         public String getDisplayName() {
             return Messages.HelloWorldBuilder_DescriptorImpl_DisplayName();
         }
+
 
     }
 

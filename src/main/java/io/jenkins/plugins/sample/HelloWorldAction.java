@@ -19,7 +19,6 @@ public class HelloWorldAction implements RunAction2 {
         return name;
     }
 
-
     @Override
     public void onAttached(Run <?, ?> run){
         //Setting the field when first attaching this action to the Run.
