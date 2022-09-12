@@ -10,14 +10,17 @@ public class HelloWorldAction implements RunAction2 {
 
     private transient Run run;
     private String name;
+    private String description;
 
-    public HelloWorldAction (String name){
+    public HelloWorldAction (String name, String description){
         this.name = name;
+        this.description = description;
     }
 
     public String getName(){
         return name;
     }
+    public String getDescription(){ return description;}
 
     @Override
     public void onAttached(Run <?, ?> run){

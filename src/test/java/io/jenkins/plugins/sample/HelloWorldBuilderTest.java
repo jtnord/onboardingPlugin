@@ -16,25 +16,25 @@ public class HelloWorldBuilderTest {
     public JenkinsRule jenkinsRule = new JenkinsRule();
 
     final String name = "Julie";
-    final String description = "Is awesome";
+    final String myDescription = "Is awesome";
 
     @Test
     public void testConfigRoundtrip() throws Exception {
         FreeStyleProject project = jenkinsRule.createFreeStyleProject();
-        project.getBuildersList().add(new HelloWorldBuilder(name, description));
+        project.getBuildersList().add(new HelloWorldBuilder(name, myDescription));
         project = jenkinsRule.configRoundtrip(project);
-        jenkinsRule.assertEqualDataBoundBeans(new HelloWorldBuilder(name, description), project.getBuildersList().get(0));
+        jenkinsRule.assertEqualDataBoundBeans(new HelloWorldBuilder(name, myDescription), project.getBuildersList().get(0));
     }
 
     @Test
     public void testConfigRoundtripFrench() throws Exception {
         FreeStyleProject project = jenkinsRule.createFreeStyleProject();
-        HelloWorldBuilder builder = new HelloWorldBuilder(name, description);
+        HelloWorldBuilder builder = new HelloWorldBuilder(name, myDescription);
         builder.setUseFrench(true);
         project.getBuildersList().add(builder);
         project = jenkinsRule.configRoundtrip(project);
 
-        HelloWorldBuilder lhs = new HelloWorldBuilder(name, description);
+        HelloWorldBuilder lhs = new HelloWorldBuilder(name, myDescription);
         lhs.setUseFrench(true);
         jenkinsRule.assertEqualDataBoundBeans(lhs, project.getBuildersList().get(0));
     }
@@ -42,7 +42,7 @@ public class HelloWorldBuilderTest {
     @Test
     public void testBuild() throws Exception {
         FreeStyleProject project = jenkinsRule.createFreeStyleProject();
-        HelloWorldBuilder builder = new HelloWorldBuilder(name, description);
+        HelloWorldBuilder builder = new HelloWorldBuilder(name, myDescription);
         project.getBuildersList().add(builder);
 
         FreeStyleBuild build = jenkinsRule.buildAndAssertSuccess(project);
@@ -53,7 +53,7 @@ public class HelloWorldBuilderTest {
     public void testBuildFrench() throws Exception {
 
         FreeStyleProject project = jenkinsRule.createFreeStyleProject();
-        HelloWorldBuilder builder = new HelloWorldBuilder(name, description);
+        HelloWorldBuilder builder = new HelloWorldBuilder(name, myDescription);
         builder.setUseFrench(true);
         project.getBuildersList().add(builder);
 
@@ -68,7 +68,7 @@ public class HelloWorldBuilderTest {
         WorkflowJob job = jenkinsRule.createProject(WorkflowJob.class, "test-scripted-pipeline");
         String pipelineScript
                 = "node {\n"
-                + "  greet name:'" + name + "', myDescription:'"+ description +"'\n"
+                + "  greet name:'" + name + "', myDescription:'"+ myDescription +"'\n"
                 + "}";
         job.setDefinition(new CpsFlowDefinition(pipelineScript, true));
         WorkflowRun completedBuild = jenkinsRule.assertBuildStatusSuccess(job.scheduleBuild2(0));

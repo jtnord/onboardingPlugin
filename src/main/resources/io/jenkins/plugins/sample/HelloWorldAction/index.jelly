@@ -8,7 +8,7 @@
             <h1> 
                 Name: ${it.name}
                 <br/>
-                Description: ${it.myDescription}
+                Description: ${it.description}
             </h1>
         </l:main-panel>
     </l:layout>
