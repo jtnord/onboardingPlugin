@@ -14,8 +14,6 @@ import org.kohsuke.stapler.QueryParameter;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
@@ -29,7 +27,12 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep{
 
     @DataBoundConstructor
     public HelloWorldBuilder(String name, String description) {
-        this.name = name;
+
+        if(LibraryFunctions.nameFormatMatcher(name)){
+            this.name = name;
+        }else{
+            this.name="";
+        }
         this.description = description;
     }
 
@@ -49,6 +52,7 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep{
 
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
+
         run.addAction(new HelloWorldAction(name, description));
         if (useFrench) {
             listener.getLogger().println("Bonjour, " + name + "!");
@@ -62,12 +66,11 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep{
     @Symbol("greet")
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
-
         public FormValidation doCheckName(@QueryParameter String value, @QueryParameter boolean useFrench)
                 throws IOException, ServletException {
 
             //Check for format AND value length otherwise error will appear when form is first open
-            if(!NameFormatMatcher(value) && value.length() != 0){
+            if(!LibraryFunctions.nameFormatMatcher(value) && value.length() != 0){
                 return FormValidation.error(Messages.HelloWorldBuilder_DescriptorImpl_errors_NameFormat());
             }
             if (value.length() == 0)
@@ -89,19 +92,6 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep{
         public String getDisplayName() {
             return Messages.HelloWorldBuilder_DescriptorImpl_DisplayName();
         }
-
-
-        /**
-         * Used as regular expression check for name field on the configure job screen
-         * @param value = represents a name of a user that the user has typed in
-         * @return if the name matches the format, it is a valid name (only letters and hyphens)
-         */
-        private boolean NameFormatMatcher(String value){
-            Pattern pattern = Pattern.compile("^[A-Za-z\\s-]+$");
-            Matcher matcher = pattern.matcher(value);
-            return matcher.matches();
-        }
-
 
     }
 
